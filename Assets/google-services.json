@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "176615598966",
+    "project_id": "test555-a85b6",
+    "storage_bucket": "test555-a85b6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:176615598966:android:8ed0dd1fde643da35de857",
+        "android_client_info": {
+          "package_name": "com.play.yourwin.win.winline.football"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "176615598966-sanpmsb2rek5e0d23f7r41o5n8mj9055.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA65axJEHvzN0h5Nugm0iAu695x3m6s9VM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "176615598966-sanpmsb2rek5e0d23f7r41o5n8mj9055.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
