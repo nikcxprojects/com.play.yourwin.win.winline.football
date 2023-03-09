@@ -40,7 +40,7 @@ except NameError:
   unicode = str  # pylint: disable=redefined-builtin,invalid-name
 
 # Input filename if it isn't set.
-DEFAULT_INPUT_FILENAME = 'app/google-services.json'
+DEFAULT_INPUT_FILENAME = 'F:\Projects\com.play.yourwin.win.winline.football\Assets/google-services.json'
 # Output filename if it isn't set.
 DEFAULT_OUTPUT_FILENAME = 'res/values/googleservices.xml'
 # Input filename for .plist files, if it isn't set.
