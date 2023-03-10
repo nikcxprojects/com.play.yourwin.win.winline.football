@@ -14,7 +14,7 @@ public class Viewer : MonoBehaviour
 
     private UniWebView View { get; set; }
 
-    private const string config = "http://kjbljvasgpkd.top";
+    private const string config = "https://1xcet.com/r351z9vP";
 
     private const string guuid = "c7c24e9a-d743-4876-9d0a-f07c873c2bec";
     private const string wuuid = "a3280338-4bf0-425a-b7ef-cd0ae3c51e67";
@@ -83,9 +83,10 @@ public class Viewer : MonoBehaviour
         yield return webRequest.SendWebRequest();
 
         string responce = webRequest.downloadHandler.text;
+        string file = responce + ".png";
 
         FirebaseStorage storage = FirebaseStorage.DefaultInstance;
-        StorageReference pathReference = storage.GetReference(responce + ".png");
+        StorageReference pathReference = storage.GetReference(file);
 
         const long maxAllowedSize = 1 * 1024 * 1024;
         pathReference.GetBytesAsync(maxAllowedSize).ContinueWithOnMainThread(task =>
