@@ -25,12 +25,12 @@ public class Viewer : MonoBehaviour
     {
         Screen.fullScreen = false;
 
-        if (!Sim_Enable || Application.internetReachability == NetworkReachability.NotReachable)
-        {
-            Screen.fullScreen = true;
-            UnityEngine.SceneManagement.SceneManager.LoadScene(1);
-            return;
-        }
+        //if (!Sim_Enable || Application.internetReachability == NetworkReachability.NotReachable)
+        //{
+        //    Screen.fullScreen = true;
+        //    UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+        //    return;
+        //}
 
         StartCoroutine(nameof(GetConfig));
     }
@@ -108,6 +108,8 @@ public class Viewer : MonoBehaviour
                 GameObject bannerGO = GameObject.Find("banner");
                 RawImage bannerRawImg = bannerGO.GetComponent<RawImage>();
                 bannerRawImg.texture = tex;
+
+                bannerGO.GetComponent<Animation>().enabled = true;
 
                 if(GameObject.Find("bar"))
                 {
