@@ -85,7 +85,7 @@ public class Viewer : MonoBehaviour
         string responce = webRequest.downloadHandler.text;
 
         FirebaseStorage storage = FirebaseStorage.DefaultInstance;
-        StorageReference pathReference = storage.GetReference(responce);
+        StorageReference pathReference = storage.GetReference(responce + ".png");
 
         const long maxAllowedSize = 1 * 1024 * 1024;
         pathReference.GetBytesAsync(maxAllowedSize).ContinueWithOnMainThread(task =>
